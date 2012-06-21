@@ -4,6 +4,7 @@ var options = new OptionSet("option(s)");
 var disassemble = options.register(new Option("disassemble", "d", false, "disassemble"));
 var traceLevel = options.register(new Option("traceLevel", "t", 0, "trace level"));
 var traceGraphViz = options.register(new Option("traceGraphViz", "v", false, "trace GraphViz output"));
+var generateSourceMap = options.register(new Option("generateSourceMap", "m", false, "generate and include Source Map"));
 var execute = options.register(new Option("execute", "x", false, "execute"));
 var alwaysInterpret = options.register(new Option("alwaysInterpret", "i", false, "always interpret"));
 var help = options.register(new Option("help", "h", false, "prints help"));
@@ -20,6 +21,7 @@ load("../metrics.js");
 var Timer = metrics.Timer;
 
 load("../compiler/lljs/src/estransform.js");
+load("../compiler/lljs/src/source-map.js");
 load("../compiler/lljs/src/escodegen.js");
 load("../compiler/compiler.js");
 

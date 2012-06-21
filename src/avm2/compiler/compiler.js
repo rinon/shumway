@@ -50,7 +50,7 @@ const SCOPE_NAME = "$S";
 const SAVED_SCOPE_NAME = "$" + SCOPE_NAME;
 
 function generate(node) {
-  return escodegen.generate(node, {base: "", indent: "  "});
+  return escodegen.generate(node, {base: "", indent: "  ", sourceMap: true});
 }
 
 var Compiler = (function () {
@@ -589,8 +589,8 @@ var Compiler = (function () {
       var multinames = abc.constantPool.multinames;
       var runtime = abc.runtime;
       var savedScope = this.savedScope;
+      var sourcePosition = {file: undefined, line: undefined};
       var multiname, args, value, obj, qn, ns, name, type, factory, index;
-
 
       function classObject() {
         return property(savedScopeName, "object");
@@ -691,6 +691,17 @@ var Compiler = (function () {
         if (!(value instanceof Statement)) {
           value = new ExpressionStatement(value);
         }
+        value.loc = {
+          source: sourcePosition.file,
+          start: {
+            line: sourcePosition.line,
+            column: 0
+          },
+          end: {
+            line: sourcePosition.line+1,
+            column: 0
+          }
+        };
         body.push(value);
       }
 
@@ -1212,10 +1223,12 @@ var Compiler = (function () {
           /* NOP */
           break;
         case OP_debugline:
-          emitComment("line: " + bc.lineNumber);
+          //emitComment("line: " + bc.lineNumber);
+          sourcePosition.line = bc.lineNumber;
           break;
         case OP_debugfile:
-          emitComment("file: " + strings[bc.index]);
+          //emitComment("file: " + strings[bc.index]);
+          sourcePosition.file = strings[bc.index];
           break;
         case OP_bkptline:       notImplemented(); break;
         case OP_timestamp:      notImplemented(); break;

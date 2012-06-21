@@ -32,6 +32,7 @@ load("../parser.js");
 load("../disassembler.js");
 load("../analyze.js");
 load("../compiler/lljs/src/estransform.js");
+load("../compiler/lljs/src/source-map.js");
 load("../compiler/lljs/src/escodegen.js");
 load("../compiler/compiler.js");
 load("../native.js");

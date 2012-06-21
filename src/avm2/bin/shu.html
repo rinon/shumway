@@ -21,6 +21,7 @@
       var options = new OptionSet("option(s)");
       var traceLevel = options.register(new Option("traceLevel", "t", 0, "trace level"));
       var disassemble = options.register(new Option("disassemble", "d", false, "disassemble"));
+      var generateSourceMap = options.register(new Option("generateSourceMap", "m", false, "generate and include Source Map"));
     </script>
 
     <script type="text/javascript" src="../DataView.js"></script>
@@ -31,6 +32,7 @@
     <script type="text/javascript" src="../viz.js"></script>
 
     <script type="text/javascript" src="../compiler/lljs/src/estransform.js"></script>
+    <script type="text/javascript" src="../compiler/lljs/src/source-map.js"></script>
     <script type="text/javascript" src="../compiler/lljs/src/escodegen.js"></script>
     <script type="text/javascript" src="../compiler/compiler.js"></script>
 
@@ -73,6 +75,8 @@
 
     <script type="text/javascript">
       traceLevel.value = 2;
+      generateSourceMap.value = true;
+      
       var abcs = [];
       abcs.push(["../generated/builtin.abc", ALWAYS_INTERPRET]);
       abcs.push(["../generated/playerGlobal.abc", ALWAYS_INTERPRET]);
@@ -83,7 +87,8 @@
       // abcs.push(["../tests/sunspider/crypto-md5.abc"]);
       // abcs.push(["../tests/tamarin/ecma3/Array/e15_4_3_2.abc"]);
 
-      abcs.push(["../tests/crypto.abc", ALWAYS_INTERPRET]);
+//      abcs.push(["../tests/crypto.abc", ALWAYS_INTERPRET]);
+      abcs.push(["../tests/sunspider/access-binary-trees.abc"]);
 
       function executeNext() {
         if (abcs.length) {

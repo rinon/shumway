@@ -713,17 +713,28 @@ var Runtime = (function () {
       return interpretedMethod(this.interpreter, mi, scope);
     }
 
-    var body = this.compiler.compileMethod(mi, hasDefaults, scope);
-
     var parameters = mi.parameters.map(function (p) {
       return p.name;
     });
     parameters.unshift(SAVED_SCOPE_NAME);
 
     var fnName = mi.name ? mi.name.getQualifiedName() : "fn" + functionCount;
+
+    var codeWithMap = this.compiler.compileMethod(mi, hasDefaults, scope).toStringWithSourceMap({file: fnName + ".js"});
+    var body = codeWithMap.code;
+    var map = codeWithMap.map;
+
     var fnSource = "function " + fnName + " (" + parameters.join(", ") + ") " + body;
+    fnSource += "\n//@ sourceURL=" + fnName + ".js\n";
+    if (generateSourceMap.value) {
+      fnSource += "\n//@ sourceMappingURL=data:;base64," + base64ArrayBuffer(utf8decode(map.toString())) + "\n";
+      //fnSource += "//@ sourceMappingURL=/" + fnName + ".json\n";
+    }
     if (traceLevel.value > 0) {
       print (fnSource);
+      print (map.toString());
+      var consumer = new sourceMap.SourceMapConsumer(map.toString());
+      print (JSON.stringify(consumer._generatedMappings));
     }
     if (true) { // Use |false| to avoid eval(), which is only useful for stack traces.
       mi.compiledMethod = eval('[' + fnSource + '][0]');
